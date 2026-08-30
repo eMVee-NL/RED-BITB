@@ -1,0 +1,23 @@
+<div class="fake-tabs-bar safari" id="bitbTabsBar">
+    <div class="mac-dots">
+        <span class="dot red" onclick="closeFakeWindow()"></span>
+        <span class="dot yellow" onclick="minimizeFakeWindow(event)"></span>
+        <span class="dot green" onclick="maximizeFakeWindow(event)"></span>
+    </div>
+    <div class="tab-list" style="margin-left: 15px;">
+        <div class="fake-tab active" data-tab="tab1" onclick="switchTab('tab1', 'https://apple.com')">
+            <span class="tab-title">🍏 Log in met Apple ID</span>
+        </div>
+        <div class="fake-tab" data-tab="tab2" onclick="switchTab('tab2', 'https://apple.com')">
+            <span class="tab-title">📄 Apple Privacy</span>
+            <span class="tab-close" onclick="closeTab(event, 'tab2')">✕</span>
+        </div>
+    </div>
+</div>
+<div class="fake-header safari" id="bitbHeader">
+    <div class="mac-nav">◁ ▷ ⟳</div>
+    <form class="address-form" onsubmit="handleUrlSubmit(event)">
+        <span class="lock">🔒</span>
+        <input type="text" id="fakeUrlInput" class="address-input" style="text-align: center;" value="https://apple.com">
+    </form>
+</div>

