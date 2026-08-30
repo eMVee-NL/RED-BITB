@@ -6,7 +6,7 @@ By contributing to this project, you agree that your work will be licensed under
 
 ## ⚠️ Absolute Rule: Keep it Educational
 
-This tool is strictly for authorized research and defense education. **We do not accept contributions designed to bypass security controls, evade detection by security software, or implement pixel-perfect brand spoofing intended for malicious activities.** Keep templates generic and conceptual.
+This tool is strictly for authorized research, authorized security assignments and defense education. Try to keep templates generic and conceptual. But if possible it is allowed to make it better for the tool.
 
 ## 🚀 How to Contribute
 
